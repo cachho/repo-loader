@@ -92,7 +92,15 @@ def main() -> int:
         output_file.write("--END--")
     if not args.clipboard:
         print(f"Repository contents written to {outfile}")
-        os.startfile(outfile)
+        if sys.platform == "win32":
+            os.startfile(outfile)
+        elif sys.platform == "darwin":
+            os.system(f"open {outfile}")
+        else:
+            try:
+                os.system(f"xdg-open {outfile}")
+            except Exception:
+                pass
         return 0
     with open(outfile, "r") as output_file:
         contents = output_file.read()
