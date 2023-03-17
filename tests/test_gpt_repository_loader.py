@@ -42,7 +42,7 @@ class TestGPTRepositoryLoader(unittest.TestCase):
 
         self.assertEqual(len(lines_expected), len(lines_actual))
         for i in range(len(lines_expected)):  # pylint: disable=consider-using-enumerate
-            self.assertEqual(lines_expected[i].replace("/", "\\"), lines_actual[i])
+            self.assertEqual(lines_expected[i].replace("/", os.path.sep), lines_actual[i])
 
         # Clean up the output file
         shutil.rmtree(os.path.dirname(output_file_path))
