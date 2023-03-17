@@ -7,7 +7,7 @@ import re
 
 from setuptools import setup
 
-URL = "https://github.com/zackees/gpt-repository-loader"
+URL = "https://github.com/zackees/gptrepo"
 KEYWORDS = "gpt repository loader"
 HERE = os.path.dirname(os.path.abspath(__file__))
 

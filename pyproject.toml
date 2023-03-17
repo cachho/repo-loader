@@ -3,7 +3,7 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gpt-repository-loader"
+name = "gptrepo"
 description = "gpt repository loader"
 requires-python = ">=3.7"
 keywords = ["template-python-cmd"]
@@ -12,9 +12,8 @@ classifiers = ["Programming Language :: Python :: 3"]
 dependencies = [
     "pyperclip"
 ]
-# Change this with the version number bump.
-# Also make the change in zcmds/version.py
-version = "1.0.0"
+
+version = "1.0.1"
 
 [tool.pylint."MESSAGES CONTROL"]
 good-names = [
