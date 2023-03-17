@@ -99,7 +99,7 @@ def main() -> int:
         else:
             try:
                 os.system(f"xdg-open {outfile}")
-            except Exception:
+            except Exception:  # pylint: disable=broad-except
                 pass
         return 0
     with open(outfile, "r") as output_file:
