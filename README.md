@@ -1,6 +1,6 @@
 # gptrepo
 
-This is a package of the very excellent [gptrepo](https://github.com/mpoon/gptrepo) by mpoon.
+This is a fork of the very excellent [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
 
 
 Usage
@@ -22,7 +22,7 @@ This will be particularly useful when chat gpt4-32k is release. Right now this w
 `gptrepo` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
 
 ## Contributing
-Some context around building this is [located here](https://github.com/mpoon/gptrepo/discussions/18). Appreciate any issues and pull requests in the spirit of having mostly GPT build out this tool. Using [ChatGPT Plus](https://chat.openai.com/) is recommended for quick access to GPT-4.
+Some context around building this is [located here](https://github.com/mpoon/gpt-repository-loader/discussions/18). Appreciate any issues and pull requests in the spirit of having mostly GPT build out this tool. Using [ChatGPT Plus](https://chat.openai.com/) is recommended for quick access to GPT-4.
 
 ## Getting Started
 
