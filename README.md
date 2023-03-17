@@ -9,7 +9,9 @@ pip install gptrepo
 gptrepo  # now output.txt should appear in the current directory
 ```
 
-This tool concatenates through all the files in teh repo and adds ai prompts which can be used for chat gpt conversations.
+This tool concatenates through all the files in the repo and adds ai prompts which can be used for chat gpt conversations.
+
+Simply open up the file, copy and paste it into the chat gpt window and then ask your question about the code.
 
 This will be particularly useful when chat gpt4-32k is released. Right now this will only work on very small repos.
 
