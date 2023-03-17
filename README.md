@@ -24,22 +24,6 @@ This will be particularly useful when chat gpt4-32k is release. Right now this w
 ## Contributing
 Some context around building this is [located here](https://github.com/mpoon/gpt-repository-loader/discussions/18). Appreciate any issues and pull requests in the spirit of having mostly GPT build out this tool. Using [ChatGPT Plus](https://chat.openai.com/) is recommended for quick access to GPT-4.
 
-## Getting Started
-
-To get started with `gptrepo`, follow these steps:
-
-1. Ensure you have Python 3 installed on your system.
-2. Clone or download the `gptrepo` repository.
-3. Navigate to the repository's root directory in your terminal.
-4. Run `gptrepo` with the following command:
-
-   ```bash
-   python gpt_repository_loader.py /path/to/git/repository
-   ```
-    Replace `/path/to/git/repository` with the path to the Git repository you want to process.
-
-5. The tool will generate an output.txt file containing the text representation of the repository. You can now use this file as input for AI language models or other text-based processing tasks.
-
 ## Running Tests
 
 To run the tests for `gptrepo`, follow these steps:
@@ -49,7 +33,7 @@ To run the tests for `gptrepo`, follow these steps:
 3. Run the tests with the following command:
 
    ```bash
-   python -m unittest test_gpt_repository_loader.py
+   tox
    ```
 Now, the test harness is added to the `gptrepo` project. You can run the tests by executing the command `tox` in your terminal.
 
