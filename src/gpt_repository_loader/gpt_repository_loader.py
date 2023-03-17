@@ -41,7 +41,7 @@ def process_repository(repo_path, ignore_list, output_file):
                 output_file.write(f"{contents}\n")
 
 
-def main() -> int:
+def main() -> int:  # pylint: disable=too-many-statements
     # copy this but using argparse
     parser = argparse.ArgumentParser(
         description="Process a git repository into a single file for chat gpt."
