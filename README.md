@@ -1,5 +1,17 @@
 # gpt-repository-loader
 
+This is a package of the very excellent [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
+
+
+Usage
+```python
+pip install gptrepo
+gptrepo  # now output.txt should appear in the current directory
+```
+
+This tool concatenates through all the files in teh repo and adds ai prompts which can be used for chat gpt conversations.
+
+This will be particularly useful when chat gpt4-32k is release. Right now this will only work on very small repos.
 
 [![Linting](../../actions/workflows/lint.yml/badge.svg)](../../actions/workflows/lint.yml)
 
