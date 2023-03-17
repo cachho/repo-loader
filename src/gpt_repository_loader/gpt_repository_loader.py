@@ -36,7 +36,7 @@ def process_repository(repo_path, ignore_list, output_file):
             if not should_ignore(relative_file_path, ignore_list):
                 with open(file_path, "r", errors="ignore") as file:
                     contents = file.read()
-                output_file.write("-" * 4 + "\n")
+                output_file.write("----!@#$----" + "\n")
                 output_file.write(f"{relative_file_path}\n")
                 output_file.write(f"{contents}\n")
 
@@ -69,7 +69,7 @@ def main() -> int:
         with open(ignore_file_path, "r") as ignore_file:
             contents = ignore_file.read()
         with open(ignore_file_path, "w") as ignore_file:
-            ignore_file.write(contents.replace(args.write_config, repo_path))
+            ignore_file.write(contents)
 
     preamble_file = args.preamble
     if os.path.exists(ignore_file_path):

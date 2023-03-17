@@ -9,9 +9,7 @@ from gpt_repository_loader.gpt_repository_loader import (
 )
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-GPT_IGNORE_PATH = os.path.join(
-    PROJECT_ROOT, "src", "gpt_repository_loader", ".gptignore"
-)
+GPT_IGNORE_PATH = os.path.join(PROJECT_ROOT, "src", "gpt_repository_loader", ".gptignore")
 
 
 class TestGPTRepositoryLoader(unittest.TestCase):
@@ -22,9 +20,7 @@ class TestGPTRepositoryLoader(unittest.TestCase):
     def test_end_to_end(self):
         # Set up the output file and the expected output file paths
         output_file_path = os.path.join(tempfile.mkdtemp(), "output.txt")
-        expected_output_file_path = os.path.join(
-            self.test_data_path, "expected_output.txt"
-        )
+        expected_output_file_path = os.path.join(self.test_data_path, "expected_output.txt")
 
         # Create an ignore list for the example repository
         ignore_file_path = os.path.join(self.example_repo_path, ".gptignore")
@@ -38,10 +34,15 @@ class TestGPTRepositoryLoader(unittest.TestCase):
             process_repository(self.example_repo_path, ignore_list, output_file)
 
         # Compare the output to the expected output
-        with open(output_file_path, "r") as output_file, open(
-            expected_output_file_path, "r"
-        ) as expected_output_file:
-            self.assertEqual(output_file.read(), expected_output_file.read())
+
+        lines_expected = open(  # pylint: disable=consider-using-with
+            expected_output_file_path
+        ).readlines()
+        lines_actual = open(output_file_path).readlines()  # pylint: disable=consider-using-with
+
+        self.assertEqual(len(lines_expected), len(lines_actual))
+        for i in range(len(lines_expected)):  # pylint: disable=consider-using-enumerate
+            self.assertEqual(lines_expected[i].replace("/", "\\"), lines_actual[i])
 
         # Clean up the output file
         shutil.rmtree(os.path.dirname(output_file_path))
