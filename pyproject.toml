@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gpt-repository-loader"
+description = "gpt repository loader"
+requires-python = ">=3.7"
+keywords = ["template-python-cmd"]
+license = { text = "BSD 3-Clause License" }
+classifiers = ["Programming Language :: Python :: 3"]
+dependencies = [
+    "pyperclip"
+]
+# Change this with the version number bump.
+# Also make the change in zcmds/version.py
+version = "1.0.0"
+
+[tool.pylint."MESSAGES CONTROL"]
+good-names = [
+    "c",
+    "i",
+    "ok",
+    "id",
+    "e",
+    "f",
+    "x",
+    "y",
+    "pf"
+]
+
+[tool.pylint.message-control]
+disable = "missing-function-docstring,missing-module-docstring,line-too-long,unspecified-encoding,missing-class-docstring"
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+
+
+[project.scripts]
+gptrepo = "gpt_repository_loader.cli:main"

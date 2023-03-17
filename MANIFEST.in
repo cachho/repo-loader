@@ -1,0 +1,3 @@
+include pyproject.toml
+include requirements.testing.txt
+include src/gpt_repository_loader/.gptignore

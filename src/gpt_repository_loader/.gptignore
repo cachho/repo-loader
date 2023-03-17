@@ -11,3 +11,8 @@ LICENSE
 *.tar
 *.tar.gz
 .gitignore
+venv/*
+**/.DS_Store
+**/.gptignore
+*.egg*
+.vscode/*
