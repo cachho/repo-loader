@@ -1,6 +1,6 @@
-# gpt-repository-loader
+# gptrepo
 
-This is a package of the very excellent [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
+This is a package of the very excellent [gptrepo](https://github.com/mpoon/gptrepo) by mpoon.
 
 
 Usage
@@ -19,19 +19,19 @@ This will be particularly useful when chat gpt4-32k is release. Right now this w
 [![Ubuntu_Tests](../../actions/workflows/push_ubuntu.yml/badge.svg)](../../actions/workflows/push_ubuntu.yml)
 [![Win_Tests](../../actions/workflows/push_win.yml/badge.svg)](../../actions/workflows/push_win.yml)
 
-`gpt-repository-loader` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
+`gptrepo` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
 
 ## Contributing
-Some context around building this is [located here](https://github.com/mpoon/gpt-repository-loader/discussions/18). Appreciate any issues and pull requests in the spirit of having mostly GPT build out this tool. Using [ChatGPT Plus](https://chat.openai.com/) is recommended for quick access to GPT-4.
+Some context around building this is [located here](https://github.com/mpoon/gptrepo/discussions/18). Appreciate any issues and pull requests in the spirit of having mostly GPT build out this tool. Using [ChatGPT Plus](https://chat.openai.com/) is recommended for quick access to GPT-4.
 
 ## Getting Started
 
-To get started with `gpt-repository-loader`, follow these steps:
+To get started with `gptrepo`, follow these steps:
 
 1. Ensure you have Python 3 installed on your system.
-2. Clone or download the `gpt-repository-loader` repository.
+2. Clone or download the `gptrepo` repository.
 3. Navigate to the repository's root directory in your terminal.
-4. Run `gpt-repository-loader` with the following command:
+4. Run `gptrepo` with the following command:
 
    ```bash
    python gpt_repository_loader.py /path/to/git/repository
@@ -42,7 +42,7 @@ To get started with `gpt-repository-loader`, follow these steps:
 
 ## Running Tests
 
-To run the tests for `gpt-repository-loader`, follow these steps:
+To run the tests for `gptrepo`, follow these steps:
 
 1. Ensure you have Python 3 installed on your system.
 2. Navigate to the repository's root directory in your terminal.
@@ -51,7 +51,7 @@ To run the tests for `gpt-repository-loader`, follow these steps:
    ```bash
    python -m unittest test_gpt_repository_loader.py
    ```
-Now, the test harness is added to the `gpt-repository-loader` project. You can run the tests by executing the command `python -m unittest test_gpt_repository_loader.py` in your terminal.
+Now, the test harness is added to the `gptrepo` project. You can run the tests by executing the command `tox` in your terminal.
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
