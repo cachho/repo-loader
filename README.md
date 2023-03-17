@@ -1,5 +1,24 @@
 # gpt-repository-loader
 
+This is a package of the very excellent [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
+
+
+Usage
+```python
+pip install gptrepo
+gptrepo  # now output.txt should appear in the current directory
+```
+
+This tool concatenates through all the files in teh repo and adds ai prompts which can be used for chat gpt conversations.
+
+This will be particularly useful when chat gpt4-32k is release. Right now this will only work on very small repos.
+
+[![Linting](../../actions/workflows/lint.yml/badge.svg)](../../actions/workflows/lint.yml)
+
+[![MacOS_Tests](../../actions/workflows/push_macos.yml/badge.svg)](../../actions/workflows/push_macos.yml)
+[![Ubuntu_Tests](../../actions/workflows/push_ubuntu.yml/badge.svg)](../../actions/workflows/push_ubuntu.yml)
+[![Win_Tests](../../actions/workflows/push_win.yml/badge.svg)](../../actions/workflows/push_win.yml)
+
 `gpt-repository-loader` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
 
 ## Contributing
