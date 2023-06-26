@@ -41,3 +41,7 @@ Now, the test harness is added to the `gptrepo` project. You can run the tests b
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Versions
+
+  * 1.0.3: Remove media files from concatenation.

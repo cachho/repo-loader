@@ -16,3 +16,11 @@ venv/*
 **/.gptignore
 *.egg*
 .vscode/*
+*.webp
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.webm
+.DS_Store
