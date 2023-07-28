@@ -7,6 +7,8 @@ import sys
 
 import pyperclip
 
+from .utils import is_readable
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -49,6 +51,14 @@ def process_repository(repo_path, ignore_list, output_file):
             if not should_ignore(relative_file_path, ignore_list):
                 with open(file_path, "r", errors="ignore") as file:
                     contents = file.read()
+
+                    if len(contents) == 0:
+                        # Ignore empty files
+                        continue
+
+                    if not is_readable(contents):
+                        # Ignore binary files
+                        continue
                 output_file.write("----!@#$----" + "\n")
                 output_file.write(f"{relative_file_path}\n")
                 output_file.write(f"{contents}\n")
