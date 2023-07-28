@@ -33,7 +33,7 @@ def should_ignore(file_path, ignore_patterns):
     return spec.match_file(file_path)
 
 
-def process_repository(repo_path, ignore_list, output_file):
+def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is_quiet):
     """Main function to iterate through the repository and write to the outfile."""
     # TODO: This could be optimized, by skipping a directory that's ignored,
     # if the whole directory is ignored. For instance right now it will go through 
@@ -54,17 +54,27 @@ def process_repository(repo_path, ignore_list, output_file):
             if num_files == 0:
                 continue
 
-            print(f"Processing directory: {content}")
+            if not is_quiet:
+                print(f"Processing directory: {content}")
 
-            with tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}') as pbar:
-                for root, _, files in os.walk(content_path):
-                    for file in files:
-                        process_file(root, file, repo_path, ignore_list, output_file)
+            pbar = tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}') if use_progress_bar else None
+
+
+            for root, _, files in os.walk(content_path):
+                for file in files:
+                    process_file(root, file, repo_path, ignore_list, output_file)
+                    if pbar:
                         pbar.update(1)
+
+            if pbar:
+                pbar.close()
+
         else:
             # It is a file
-            print(f"Processing file: {content}")
+            if not is_quiet:
+                print(f"Processing file: {content}")
             process_file(repo_path, content, repo_path, ignore_list, output_file)
+
 
 def process_file(root, file, repo_path, ignore_list, output_file):
     file_path = os.path.join(root, file)
@@ -124,6 +134,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     parser.add_argument("-p", "--preamble", help="path to the preamble file", type=str, nargs="?")
     parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
     parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
+    parser.add_argument("-pg", "--progress", help="display a progress bar", action="store_true")
     parser.add_argument(
         "--write-config",
         help="Write a default config file to the target directory.",
@@ -158,7 +169,7 @@ def main() -> int:  # pylint: disable=too-many-statements
             output_file.write(
                 "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context.\n"
             )
-        process_repository(repo_path, ignore_list, output_file)
+        process_repository(repo_path, ignore_list, output_file, args.progress, args.quiet)
     with open(out_path, "a") as output_file:
         output_file.write("--END--")
     if not args.clipboard and not args.quiet:
