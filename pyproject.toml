@@ -10,7 +10,8 @@ keywords = ["template-python-cmd"]
 license = { text = "BSD 3-Clause License" }
 classifiers = ["Programming Language :: Python :: 3"]
 dependencies = [
-    "pyperclip"
+    "pyperclip",
+    "pathspec==0.11.1"
 ]
 
 version = "1.0.3"
