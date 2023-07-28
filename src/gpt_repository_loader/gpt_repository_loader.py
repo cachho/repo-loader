@@ -7,6 +7,7 @@ import sys
 import pyperclip
 from pathspec import PathSpec
 from pathspec.patterns import GitWildMatchPattern
+from tqdm import tqdm
 
 from .utils import is_readable
 
@@ -38,25 +39,52 @@ def process_repository(repo_path, ignore_list, output_file):
     # if the whole directory is ignored. For instance right now it will go through 
     # all files in `venv` and determine that each is ignored, instead of just skipping
     # the whole directory
-    for root, _, files in os.walk(repo_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            relative_file_path = os.path.relpath(file_path, repo_path)
+    # Get a list of top-level files and directories.
+    top_level_contents = list(os.listdir(repo_path))
 
-            if not should_ignore(relative_file_path, ignore_list):
-                with open(file_path, "r", errors="ignore") as file:
-                    contents = file.read()
+    for content in top_level_contents:
+        content_path = os.path.join(repo_path, content)
+        
+        # Check if it is a file or directory
+        if os.path.isdir(content_path):
+            # It is a directory
+            
+            # Count the number of files in the directory (including all subdirectories).
+            num_files = sum([len(files) for r, d, files in os.walk(content_path)])
+            if num_files == 0:
+                continue
 
-                    if len(contents) == 0:
-                        # Ignore empty files
-                        continue
+            print(f"Processing directory: {content}")
 
-                    if not is_readable(contents):
-                        # Ignore binary files
-                        continue
-                output_file.write("----!@#$----" + "\n")
-                output_file.write(f"{relative_file_path}\n")
-                output_file.write(f"{contents}\n")
+            with tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}') as pbar:
+                for root, _, files in os.walk(content_path):
+                    for file in files:
+                        process_file(root, file, repo_path, ignore_list, output_file)
+                        pbar.update(1)
+        else:
+            # It is a file
+            print(f"Processing file: {content}")
+            process_file(repo_path, content, repo_path, ignore_list, output_file)
+
+def process_file(root, file, repo_path, ignore_list, output_file):
+    file_path = os.path.join(root, file)
+    relative_file_path = os.path.relpath(file_path, repo_path)
+
+    if not should_ignore(relative_file_path, ignore_list):
+        with open(file_path, "r", errors="ignore") as file:
+            contents = file.read()
+
+            if len(contents) == 0:
+                # Ignore empty files
+                return
+
+            if not is_readable(contents):
+                # Ignore binary files
+                return
+
+        output_file.write("----!@#$----" + "\n")
+        output_file.write(f"{relative_file_path}\n")
+        output_file.write(f"{contents}\n")
 
 
 def build_ignore_list(repo_path, filename):
