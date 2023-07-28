@@ -102,6 +102,10 @@ def main() -> int:  # pylint: disable=too-many-statements
     repo_path = args.repo_path or os.getcwd()
 
     ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore") + build_ignore_list(repo_path=repo_path, filename=".gitignore")
+    # Filter comments and empty lines
+    ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != '#']
+    # Filter duplicats
+    ignore_list = list(set(ignore_list))
 
     preamble_file = args.preamble
 
