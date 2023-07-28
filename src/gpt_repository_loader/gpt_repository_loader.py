@@ -106,7 +106,6 @@ def main() -> int:  # pylint: disable=too-many-statements
     ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != '#']
     # Filter duplicats
     ignore_list = list(set(ignore_list))
-    print(ignore_list)
 
     preamble_file = args.preamble
 
