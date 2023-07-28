@@ -10,6 +10,19 @@ import pyperclip
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
+def open_file(filename):
+    """Open the outfile in a OS-specific reader"""
+    if sys.platform == "win32":
+        os.startfile(filename)
+    elif sys.platform == "darwin":
+        os.system(f"open {filename}")
+    else:
+        try:
+            os.system(f"xdg-open {filename}")
+        except Exception:  # pylint: disable=broad-except
+            pass
+
+
 def get_ignore_list(ignore_file_path):
     ignore_list = []
     with open(ignore_file_path, "r") as ignore_file:
@@ -101,15 +114,7 @@ def main() -> int:  # pylint: disable=too-many-statements
         output_file.write("--END--")
     if not args.clipboard and not args.quiet:
         print(f"Repository contents written to {outfile}")
-        if sys.platform == "win32":
-            os.startfile(outfile)
-        elif sys.platform == "darwin":
-            os.system(f"open {outfile}")
-        else:
-            try:
-                os.system(f"xdg-open {outfile}")
-            except Exception:  # pylint: disable=broad-except
-                pass
+        open_file(filename=outfile)
         return 0
     if args.clipboard:
         with open(outfile, "r") as output_file:
