@@ -7,6 +7,7 @@ import sys
 import pyperclip
 from pathspec import PathSpec
 from pathspec.patterns import GitWildMatchPattern
+from tqdm import tqdm
 
 from .utils import is_readable
 
@@ -32,31 +33,69 @@ def should_ignore(file_path, ignore_patterns):
     return spec.match_file(file_path)
 
 
-def process_repository(repo_path, ignore_list, output_file):
+def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is_quiet):
     """Main function to iterate through the repository and write to the outfile."""
     # TODO: This could be optimized, by skipping a directory that's ignored,
     # if the whole directory is ignored. For instance right now it will go through 
     # all files in `venv` and determine that each is ignored, instead of just skipping
     # the whole directory
-    for root, _, files in os.walk(repo_path):
-        for file in files:
-            file_path = os.path.join(root, file)
-            relative_file_path = os.path.relpath(file_path, repo_path)
+    # Get a list of top-level files and directories.
+    top_level_contents = list(os.listdir(repo_path))
 
-            if not should_ignore(relative_file_path, ignore_list):
-                with open(file_path, "r", errors="ignore") as file:
-                    contents = file.read()
+    for content in top_level_contents:
+        content_path = os.path.join(repo_path, content)
+        
+        # Check if it is a file or directory
+        if os.path.isdir(content_path):
+            # It is a directory
+            
+            # Count the number of files in the directory (including all subdirectories).
+            num_files = sum([len(files) for r, d, files in os.walk(content_path)])
+            if num_files == 0:
+                continue
 
-                    if len(contents) == 0:
-                        # Ignore empty files
-                        continue
+            if not is_quiet and not use_progress_bar:
+                print(f"Processing directory: {content}")
 
-                    if not is_readable(contents):
-                        # Ignore binary files
-                        continue
-                output_file.write("----!@#$----" + "\n")
-                output_file.write(f"{relative_file_path}\n")
-                output_file.write(f"{contents}\n")
+            pbar = tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}', desc = f"{content[:17]:<20}") if use_progress_bar else None
+
+
+            for root, _, files in os.walk(content_path):
+                for file in files:
+                    process_file(root, file, repo_path, ignore_list, output_file)
+                    if pbar:
+                        pbar.update(1)
+
+            if pbar:
+                pbar.close()
+
+        else:
+            # It is a file
+            if not is_quiet and not use_progress_bar:
+                print(f"Processing file: {content}")
+            process_file(repo_path, content, repo_path, ignore_list, output_file)
+
+
+def process_file(root, file, repo_path, ignore_list, output_file):
+    """Write file content to output file"""
+    file_path = os.path.join(root, file)
+    relative_file_path = os.path.relpath(file_path, repo_path)
+
+    if not should_ignore(relative_file_path, ignore_list):
+        with open(file_path, "r", errors="ignore") as file:
+            contents = file.read()
+
+            if len(contents) == 0:
+                # Ignore empty files
+                return
+
+            if not is_readable(contents):
+                # Ignore binary files
+                return
+
+        output_file.write("----!@#$----" + "\n")
+        output_file.write(f"{relative_file_path}\n")
+        output_file.write(f"{contents}\n")
 
 
 def build_ignore_list(repo_path, filename):
@@ -96,6 +135,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     parser.add_argument("-p", "--preamble", help="path to the preamble file", type=str, nargs="?")
     parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
     parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
+    parser.add_argument("-pg", "--progress", help="display a progress bar", action="store_true")
     parser.add_argument(
         "--write-config",
         help="Write a default config file to the target directory.",
@@ -130,7 +170,7 @@ def main() -> int:  # pylint: disable=too-many-statements
             output_file.write(
                 "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context.\n"
             )
-        process_repository(repo_path, ignore_list, output_file)
+        process_repository(repo_path, ignore_list, output_file, args.progress, args.quiet)
     with open(out_path, "a") as output_file:
         output_file.write("--END--")
     if not args.clipboard and not args.quiet:
