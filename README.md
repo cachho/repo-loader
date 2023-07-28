@@ -2,8 +2,8 @@
 
 This is a fork of the very excellent [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
 
-
 Usage
+
 ```python
 pip install gptrepo
 gptrepo  # now output.txt should appear in the current directory
@@ -24,6 +24,7 @@ This will be particularly useful when chat gpt4-32k is released. Right now this 
 `gptrepo` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
 
 ## Contributing
+
 Some context around building this is [located here](https://github.com/mpoon/gpt-repository-loader/discussions/18). Appreciate any issues and pull requests in the spirit of having mostly GPT build out this tool. Using [ChatGPT Plus](https://chat.openai.com/) is recommended for quick access to GPT-4.
 
 ## Running Tests
@@ -37,11 +38,13 @@ To run the tests for `gptrepo`, follow these steps:
    ```bash
    tox
    ```
-Now, the test harness is added to the `gptrepo` project. You can run the tests by executing the command `tox` in your terminal.
+
+   Now, the test harness is added to the `gptrepo` project. You can run the tests by executing the command `tox` in your terminal.
 
 ## License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Versions
 
-  * 1.0.3: Remove media files from concatenation.
+- 1.0.3: Remove media files from concatenation.
