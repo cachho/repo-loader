@@ -136,6 +136,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
     parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
     parser.add_argument("-pg", "--progress", help="display a progress bar", action="store_true")
+    parser.add_argument("--open", help="open file after processing", action="store_true")
     parser.add_argument(
         "--write-config",
         help="Write a default config file to the target directory.",
@@ -173,9 +174,13 @@ def main() -> int:  # pylint: disable=too-many-statements
         process_repository(repo_path, ignore_list, output_file, args.progress, args.quiet)
     with open(out_path, "a") as output_file:
         output_file.write("--END--")
-    if not args.clipboard and not args.quiet:
-        print(f"Repository contents written to {out_path}")
-        open_file(filename=out_path)
+
+    # Post Processing
+    if not args.clipboard:
+        if not args.quiet:
+            print(f"Repository contents written to {out_path}")
+        if args.open:
+            open_file(filename=out_path)
         return 0
     if args.clipboard:
         with open(out_path, "r") as output_file:
