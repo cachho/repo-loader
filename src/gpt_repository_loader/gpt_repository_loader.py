@@ -70,6 +70,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     parser.add_argument("repo_path", help="path to the git repository", type=str, nargs="?")
     parser.add_argument("-p", "--preamble", help="path to the preamble file", type=str, nargs="?")
     parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
+    parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
     parser.add_argument(
         "--write-config",
         help="Write a default config file to the target directory.",
@@ -98,7 +99,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     outfile = os.path.abspath("output.txt")
     with open(outfile, "a") as output_file:
         output_file.write("--END--")
-    if not args.clipboard:
+    if not args.clipboard and not args.quiet:
         print(f"Repository contents written to {outfile}")
         if sys.platform == "win32":
             os.startfile(outfile)
@@ -110,9 +111,11 @@ def main() -> int:  # pylint: disable=too-many-statements
             except Exception:  # pylint: disable=broad-except
                 pass
         return 0
-    with open(outfile, "r") as output_file:
-        contents = output_file.read()
-    pyperclip.copy(contents)
-    os.remove(outfile)
-    print("Copied to clipboard")
+    if args.clipboard:
+        with open(outfile, "r") as output_file:
+            contents = output_file.read()
+        pyperclip.copy(contents)
+        os.remove(outfile)
+        if not (args.quiet):
+            print("Copied to clipboard")
     return 0
