@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 import argparse
-import fnmatch
 import os
 import sys
 
 import pyperclip
+from pathspec import PathSpec
+from pathspec.patterns import GitWildMatchPattern
 
 from .utils import is_readable
 
@@ -25,12 +26,10 @@ def open_file(filename):
             pass
 
 
-def should_ignore(file_path, ignore_list):
-    """Determines whether a file should be ignored, based on the ignore list."""
-    for pattern in ignore_list:
-        if fnmatch.fnmatch(file_path, pattern):
-            return True
-    return False
+def should_ignore(file_path, ignore_patterns):
+    """Determines whether a file should be ignored, based on the ignore patterns."""
+    spec = PathSpec.from_lines(GitWildMatchPattern, ignore_patterns)
+    return spec.match_file(file_path)
 
 
 def process_repository(repo_path, ignore_list, output_file):
@@ -103,6 +102,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     repo_path = args.repo_path or os.getcwd()
 
     ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore") + build_ignore_list(repo_path=repo_path, filename=".gitignore")
+    print(ignore_list)
 
     preamble_file = args.preamble
 
