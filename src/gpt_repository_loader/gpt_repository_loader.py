@@ -34,6 +34,10 @@ def should_ignore(file_path, ignore_patterns):
 
 def process_repository(repo_path, ignore_list, output_file):
     """Main function to iterate through the repository and write to the outfile."""
+    # TODO: This could be optimized, by skipping a directory that's ignored,
+    # if the whole directory is ignored. For instance right now it will go through 
+    # all files in `venv` and determine that each is ignored, instead of just skipping
+    # the whole directory
     for root, _, files in os.walk(repo_path):
         for file in files:
             file_path = os.path.join(root, file)
