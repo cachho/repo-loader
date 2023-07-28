@@ -92,6 +92,7 @@ def main() -> int:  # pylint: disable=too-many-statements
         description="Process a git repository into a single file for chat gpt."
     )
     parser.add_argument("repo_path", help="path to the git repository", type=str, nargs="?")
+    parser.add_argument("-o", "--output", help="output file path", type=str, nargs="?")
     parser.add_argument("-p", "--preamble", help="path to the preamble file", type=str, nargs="?")
     parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
     parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
@@ -104,13 +105,14 @@ def main() -> int:  # pylint: disable=too-many-statements
     args = parser.parse_args()
 
     repo_path = args.repo_path or os.getcwd()
+    out_path = args.output or "output.txt"
 
     gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
     git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
 
     # TODO: Added `output.txt` to gitignore, otherwise it keeps adding itself.
     # There might be a better way to do this, in case there is a file with the same name you want to add.
-    ignore_list = gpt_ignore_list + git_ignore_list + ["output.txt"]
+    ignore_list = gpt_ignore_list + git_ignore_list + [out_path]
     # Filter comments and empty lines
     ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != '#']
     # Filter duplicats
@@ -118,7 +120,7 @@ def main() -> int:  # pylint: disable=too-many-statements
 
     preamble_file = args.preamble
 
-    outfile = os.path.abspath("output.txt")
+    outfile = os.path.abspath(out_path)
     with open(outfile, "w") as output_file:
         if preamble_file:
             with open(preamble_file, "r") as pf:
@@ -129,18 +131,17 @@ def main() -> int:  # pylint: disable=too-many-statements
                 "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context.\n"
             )
         process_repository(repo_path, ignore_list, output_file)
-    outfile = os.path.abspath("output.txt")
-    with open(outfile, "a") as output_file:
+    with open(out_path, "a") as output_file:
         output_file.write("--END--")
     if not args.clipboard and not args.quiet:
-        print(f"Repository contents written to {outfile}")
-        open_file(filename=outfile)
+        print(f"Repository contents written to {out_path}")
+        open_file(filename=out_path)
         return 0
     if args.clipboard:
-        with open(outfile, "r") as output_file:
+        with open(out_path, "r") as output_file:
             contents = output_file.read()
         pyperclip.copy(contents)
-        os.remove(outfile)
+        os.remove(out_path)
         if not (args.quiet):
             print("Copied to clipboard")
     return 0
