@@ -57,7 +57,7 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
             if not is_quiet:
                 print(f"Processing directory: {content}")
 
-            pbar = tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}') if use_progress_bar else None
+            pbar = tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}', desc = f"{content[:17]:<20}") if use_progress_bar else None
 
 
             for root, _, files in os.walk(content_path):
@@ -77,6 +77,7 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
 
 
 def process_file(root, file, repo_path, ignore_list, output_file):
+    """Write file content to output file"""
     file_path = os.path.join(root, file)
     relative_file_path = os.path.relpath(file_path, repo_path)
 
