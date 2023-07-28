@@ -41,6 +41,27 @@ def process_repository(repo_path, ignore_list, output_file):
                 output_file.write(f"{contents}\n")
 
 
+def build_ignore_list(repo_path, filename):
+    """Read ignore file by filename and build ignore list"""
+    ignore_file_path = os.path.join(repo_path, filename)
+    if sys.platform == "win32":
+        ignore_file_path = ignore_file_path.replace("/", "\\")
+
+    if not os.path.exists(ignore_file_path):
+        # try and use the .gptignore file in the current directory as a fallback.
+        ignore_file_path = os.path.join(HERE, filename)
+        assert os.path.exists(ignore_file_path)
+        with open(ignore_file_path, "r") as ignore_file:
+            contents = ignore_file.read()
+        with open(ignore_file_path, "w") as ignore_file:
+            ignore_file.write(contents)
+
+    if os.path.exists(ignore_file_path):
+        return get_ignore_list(ignore_file_path)
+    else:
+        return []
+
+
 def main() -> int:  # pylint: disable=too-many-statements
     # copy this but using argparse
     parser = argparse.ArgumentParser(
@@ -58,24 +79,11 @@ def main() -> int:  # pylint: disable=too-many-statements
     args = parser.parse_args()
 
     repo_path = args.repo_path or os.getcwd()
-    ignore_file_path = os.path.join(repo_path, ".gptignore")
-    if sys.platform == "win32":
-        ignore_file_path = ignore_file_path.replace("/", "\\")
 
-    if not os.path.exists(ignore_file_path):
-        # try and use the .gptignore file in the current directory as a fallback.
-        ignore_file_path = os.path.join(HERE, ".gptignore")
-        assert os.path.exists(ignore_file_path)
-        with open(ignore_file_path, "r") as ignore_file:
-            contents = ignore_file.read()
-        with open(ignore_file_path, "w") as ignore_file:
-            ignore_file.write(contents)
+    ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
 
     preamble_file = args.preamble
-    if os.path.exists(ignore_file_path):
-        ignore_list = get_ignore_list(ignore_file_path)
-    else:
-        ignore_list = []
+
     outfile = os.path.abspath("output.txt")
     with open(outfile, "w") as output_file:
         if preamble_file:
