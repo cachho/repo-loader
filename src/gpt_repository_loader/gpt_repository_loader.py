@@ -54,7 +54,7 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
             if num_files == 0:
                 continue
 
-            if not is_quiet:
+            if not is_quiet and not use_progress_bar:
                 print(f"Processing directory: {content}")
 
             pbar = tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}', desc = f"{content[:17]:<20}") if use_progress_bar else None
@@ -71,7 +71,7 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
 
         else:
             # It is a file
-            if not is_quiet:
+            if not is_quiet and not use_progress_bar:
                 print(f"Processing file: {content}")
             process_file(repo_path, content, repo_path, ignore_list, output_file)
 
