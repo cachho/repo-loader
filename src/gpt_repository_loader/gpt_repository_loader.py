@@ -101,7 +101,12 @@ def main() -> int:  # pylint: disable=too-many-statements
 
     repo_path = args.repo_path or os.getcwd()
 
-    ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore") + build_ignore_list(repo_path=repo_path, filename=".gitignore")
+    gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
+    git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
+
+    # TODO: Added `output.txt` to gitignore, otherwise it keeps adding itself.
+    # There might be a better way to do this, in case there is a file with the same name you want to add.
+    ignore_list = gpt_ignore_list + git_ignore_list + ["output.txt"]
     # Filter comments and empty lines
     ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != '#']
     # Filter duplicats
