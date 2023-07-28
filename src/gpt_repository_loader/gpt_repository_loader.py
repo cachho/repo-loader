@@ -25,17 +25,8 @@ def open_file(filename):
             pass
 
 
-def get_ignore_list(ignore_file_path):
-    ignore_list = []
-    with open(ignore_file_path, "r") as ignore_file:
-        for line in ignore_file:
-            if sys.platform == "win32":
-                line = line.replace("/", "\\")
-            ignore_list.append(line.strip())
-    return ignore_list
-
-
 def should_ignore(file_path, ignore_list):
+    """Determines whether a file should be ignored, based on the ignore list."""
     for pattern in ignore_list:
         if fnmatch.fnmatch(file_path, pattern):
             return True
@@ -43,6 +34,7 @@ def should_ignore(file_path, ignore_list):
 
 
 def process_repository(repo_path, ignore_list, output_file):
+    """Main function to iterate through the repository and write to the outfile."""
     for root, _, files in os.walk(repo_path):
         for file in files:
             file_path = os.path.join(root, file)
@@ -79,10 +71,16 @@ def build_ignore_list(repo_path, filename):
         with open(ignore_file_path, "w") as ignore_file:
             ignore_file.write(contents)
 
+    ignore_list = []
+    # Check ignore_file_path again
     if os.path.exists(ignore_file_path):
-        return get_ignore_list(ignore_file_path)
-    else:
-        return []
+        # Add lines to ignore_list
+        with open(ignore_file_path, "r") as ignore_file:
+            for line in ignore_file:
+                if sys.platform == "win32":
+                    line = line.replace("/", "\\")
+                ignore_list.append(line.strip())
+    return ignore_list
 
 
 def main() -> int:  # pylint: disable=too-many-statements
