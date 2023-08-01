@@ -195,7 +195,6 @@ def load(
             print(f"Repository contents written to {out_path}")
         if open_file_after_processing:
             open_file(filename=out_path)
-        return 0
     if clipboard:
         with open(out_path, "r") as output_file:
             contents = output_file.read()
