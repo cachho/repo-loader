@@ -2,11 +2,20 @@
 
 This is a fork of the very excellent [gptrepo](https://github.com/zackees/gptrepo) by zackees, which itself is a fork of [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
 
-Usage
+## Usage
+
+### CLI
 
 ```python
 pip install repo-loader
 repo-loader  # now output.txt should appear in the current directory
+```
+
+### Script
+
+```python
+from repo_loader import repo_loader
+repo_loader.load("example_repo")
 ```
 
 This tool concatenates through all the files in the repo and adds ai prompts which can be used for chat gpt conversations.

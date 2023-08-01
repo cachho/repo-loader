@@ -3,6 +3,7 @@
 import argparse
 import os
 import sys
+from typing import Optional
 
 import pyperclip
 from pathspec import PathSpec
@@ -132,7 +133,103 @@ def build_ignore_list(repo_path, filename):
     return ignore_list
 
 
-def main() -> int:  # pylint: disable=too-many-statements
+# pylint: disable=too-many-arguments
+def load(
+    repo_path: Optional[str] = None,
+    out_path: Optional[str] = None,
+    preamble_file: Optional[str] = None,
+    clipboard: bool = False,
+    quiet: bool = False,
+    progress: bool = False,
+    open_file_after_processing: bool = False,
+):
+    """
+    Processes a git repository into a single text file.
+
+    Args:
+        repo_path (str, optional): The path to the git repository to be processed.
+                                   Defaults to the current working directory if None.
+        out_path (str, optional): The path to the output file.
+                                  Defaults to 'output.txt' if None.
+        preamble_file (str, optional): The path to a preamble file. The contents of this
+                                       file will be written to the output file before the
+                                       repository contents. If None, no preamble is used.
+        clipboard (bool, optional): If True, the contents of the output file will be
+                                     copied to the clipboard instead of written to a file.
+                                     Defaults to False.
+        quiet (bool, optional): If True, the script will not print to stdout
+                                and will not automatically open the output file.
+                                Defaults to False.
+        progress (bool, optional): If True, the script will display a progress
+                                   bar while processing the repository.
+                                   Defaults to False.
+        open_file_after_processing (bool, optional): If True, the output file will be
+                                                     automatically opened after processing.
+                                                     Defaults to False.
+    """
+
+    # Set defaults
+    repo_path = repo_path or os.getcwd()
+    out_path = out_path or "output.txt"
+
+    gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
+    git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
+
+    ignore_list = gpt_ignore_list + git_ignore_list + [out_path]
+    ignore_list = [x for x in ignore_list if x and len(x) > 0 and x[0] != "#"]
+    ignore_list = list(set(ignore_list))
+
+    outfile = os.path.abspath(out_path)
+    with open(outfile, "w") as output_file:
+        if preamble_file:
+            with open(preamble_file, "r") as pf:
+                preamble_text = pf.read()
+                output_file.write(f"{preamble_text}\n")
+        else:
+            output_file.write("The following text is a Git repository with code. ...")
+        process_repository(repo_path, ignore_list, output_file, progress, quiet)
+    with open(out_path, "a") as output_file:
+        output_file.write("--END--")
+
+    if not clipboard:
+        if not quiet:
+            print(f"Repository contents written to {out_path}")
+        if open_file_after_processing:
+            open_file(filename=out_path)
+    if clipboard:
+        with open(out_path, "r") as output_file:
+            contents = output_file.read()
+        pyperclip.copy(contents)
+        os.remove(out_path)
+        if not quiet:
+            print("Copied to clipboard")
+
+
+def main() -> int:
+    """
+    Processes a git repository into a single text file. The script is
+    intended to be used from the command line, and has several options
+    for customizing its behavior.
+
+    Command Line Arguments:
+        repo_path: The path to the git repository that should be processed.
+                   If this argument is omitted, the current working directory is used.
+        -o, --output: The path to the output file. If omitted, output.txt will be used.
+        -p, --preamble: The path to a preamble file. The contents of this file
+                        will be written to the output file before the repository contents.
+        --clipboard: If this flag is present, the contents of the output file
+                     will be copied to the clipboard instead of written to a file.
+        -q, --quiet: If this flag is present, the script will not print to stdout
+                     and will not automatically open the output file.
+        -pg, --progress: If this flag is present, the script will display a progress
+                         bar while processing the repository.
+        --open: If this flag is present, the output file will be automatically
+                opened after processing.
+        --write-config: Writes a default config file to the target directory.
+                        If a directory is specified, the config file will be written there.
+                        If no directory is specified, the config file will be written
+                        to the current working directory.
+    """
     # copy this but using argparse
     parser = argparse.ArgumentParser(
         description="Process a git repository into a single file for chat gpt."
@@ -152,49 +249,13 @@ def main() -> int:  # pylint: disable=too-many-statements
     )
     args = parser.parse_args()
 
-    repo_path = args.repo_path or os.getcwd()
-    out_path = args.output or "output.txt"
-
-    gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
-    git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
-
-    # pylint: disable=fixme
-    # TODO: Added `output.txt` to gitignore, otherwise it keeps adding itself.
-    # There might be a better way to do this, in case there is a file with the same name you want to add.
-    ignore_list = gpt_ignore_list + git_ignore_list + [out_path]
-    # Filter comments and empty lines
-    ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != "#"]
-    # Filter duplicats
-    ignore_list = list(set(ignore_list))
-
-    preamble_file = args.preamble
-
-    outfile = os.path.abspath(out_path)
-    with open(outfile, "w") as output_file:
-        if preamble_file:
-            with open(preamble_file, "r") as pf:
-                preamble_text = pf.read()
-                output_file.write(f"{preamble_text}\n")
-        else:
-            output_file.write(
-                "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context.\n"
-            )
-        process_repository(repo_path, ignore_list, output_file, args.progress, args.quiet)
-    with open(out_path, "a") as output_file:
-        output_file.write("--END--")
-
-    # Post Processing
-    if not args.clipboard:
-        if not args.quiet:
-            print(f"Repository contents written to {out_path}")
-        if args.open:
-            open_file(filename=out_path)
-        return 0
-    if args.clipboard:
-        with open(out_path, "r") as output_file:
-            contents = output_file.read()
-        pyperclip.copy(contents)
-        os.remove(out_path)
-        if not args.quiet:
-            print("Copied to clipboard")
+    load(
+        repo_path=args.repo_path,
+        out_path=args.output,
+        preamble_file=args.preamble,
+        clipboard=args.clipboard,
+        quiet=args.quiet,
+        progress=args.progress,
+        open_file_after_processing=args.open,
+    )
     return 0
