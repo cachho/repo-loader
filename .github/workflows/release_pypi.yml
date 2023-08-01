@@ -8,6 +8,9 @@ jobs:
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
     runs-on: ubuntu-latest
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
     steps:
       - uses: actions/checkout@v2
 
@@ -25,13 +28,7 @@ jobs:
 
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
-        permissions:
-          # IMPORTANT: this permission is mandatory for trusted publishing
-          id-token: write
 
       - name: Publish distribution 📦 to PyPI
         if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1
-        permissions:
-          # IMPORTANT: this permission is mandatory for trusted publishing
-          id-token: write
