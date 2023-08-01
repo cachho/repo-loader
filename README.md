@@ -1,12 +1,12 @@
-# gptrepo
+# repo-loader
 
-This is a fork of the very excellent [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
+This is a fork of the very excellent [gptrepo](https://github.com/zackees/gptrepo) by zackees, which itself is a fork of [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
 
 Usage
 
 ```python
-pip install gptrepo
-gptrepo  # now output.txt should appear in the current directory
+pip install repo-loader
+repo-loader  # now output.txt should appear in the current directory
 ```
 
 This tool concatenates through all the files in the repo and adds ai prompts which can be used for chat gpt conversations.
@@ -21,7 +21,7 @@ This will be particularly useful when chat gpt4-32k is released. Right now this 
 [![Ubuntu_Tests](../../actions/workflows/push_ubuntu.yml/badge.svg)](../../actions/workflows/push_ubuntu.yml)
 [![Win_Tests](../../actions/workflows/push_win.yml/badge.svg)](../../actions/workflows/push_win.yml)
 
-`gptrepo` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
+`repo-loader` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
 
 ## Contributing
 
@@ -29,7 +29,7 @@ Some context around building this is [located here](https://github.com/mpoon/gpt
 
 ## Running Tests
 
-To run the tests for `gptrepo`, follow these steps:
+To run the tests for `repo-loader`, follow these steps:
 
 1. Ensure you have Python 3 installed on your system.
 2. Navigate to the repository's root directory in your terminal.
@@ -39,7 +39,7 @@ To run the tests for `gptrepo`, follow these steps:
    tox
    ```
 
-   Now, the test harness is added to the `gptrepo` project. You can run the tests by executing the command `tox` in your terminal.
+   Now, the test harness is added to the `repo-loader` project. You can run the tests by executing the command `tox` in your terminal.
 
 ## License
 

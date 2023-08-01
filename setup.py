@@ -7,7 +7,7 @@ import re
 
 from setuptools import setup
 
-URL = "https://github.com/zackees/gptrepo"
+URL = "https://github.com/cachho/repo-loader"
 KEYWORDS = "gpt repository loader"
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,7 +28,7 @@ def get_readme() -> str:
 
 if __name__ == "__main__":
     setup(
-        maintainer="Zachary Vorhies",
+        maintainer="cachho",
         keywords=KEYWORDS,
         long_description=get_readme(),
         long_description_content_type="text/markdown",
