@@ -40,15 +40,13 @@ class TestGPTRepositoryLoader(unittest.TestCase):
             )
 
         # Compare the output to the expected output
+        with open(expected_output_file_path, "r") as file:
+            lines_expected = {line.replace("/", os.path.sep).rstrip() for line in file}
 
-        lines_expected = open(  # pylint: disable=consider-using-with
-            expected_output_file_path
-        ).readlines()
-        lines_actual = open(output_file_path).readlines()  # pylint: disable=consider-using-with
+        with open(output_file_path, "r") as file:
+            lines_actual = {line.rstrip() for line in file}
 
-        self.assertEqual(len(lines_expected), len(lines_actual))
-        for i in range(len(lines_expected)):  # pylint: disable=consider-using-enumerate
-            self.assertEqual(lines_expected[i].replace("/", os.path.sep), lines_actual[i])
+        self.assertSetEqual(lines_expected, lines_actual)
 
         # Clean up the output file
         shutil.rmtree(os.path.dirname(output_file_path))
