@@ -37,16 +37,16 @@ repo_loader.load("example_repo")
 
 ### Options
 
-| Argument                     | Type | Default                                               | Description                                                             |
-| ---------------------------- | ---- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
-| `repo_path`                  | str  | Current directory                                     | The path to the git repository to be processed.                         |
-| `out_path`                   | str  | 'output.txt'                                          | The path to the output file.                                            |
-| `preamble_file`              | str  | None                                                  | The path to a preamble file. Contents are written to output first.      |
-| `preamble`                   | str  | The following text is a Git repository with code. ... | Text that will be written to the output file before the repo contents.  |
-| `clipboard`                  | bool | False                                                 | If True, output is copied to the clipboard instead of a file.           |
-| `quiet`                      | bool | False                                                 | If True, the script will not print to stdout or auto-open the file.     |
-| `progress`                   | bool | False                                                 | If True, the script will display a progress bar during processing.      |
-| `open_file_after_processing` | bool | False                                                 | If True, the output file will be automatically opened after processing. |
+| Argument                     | Type | Default                                                                                                                         | Description                                                             |
+| ---------------------------- | ---- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `repo_path`                  | str  | Current directory                                                                                                               | The path to the git repository to be processed.                         |
+| `out_path`                   | str  | 'output.txt'                                                                                                                    | The path to the output file.                                            |
+| `preamble_file`              | str  | None                                                                                                                            | The path to a preamble file. Contents are written to output first.      |
+| `preamble`                   | str  | [here](https://github.com/cachho/repo-loader/blob/9801bbe6e879455376a337cf207db2dcc30d8225/src/repo_loader/repo_loader.py#L184) | Text that will be written to the output file before the repo contents.  |
+| `clipboard`                  | bool | False                                                                                                                           | If True, output is copied to the clipboard instead of a file.           |
+| `quiet`                      | bool | False                                                                                                                           | If True, the script will not print to stdout or auto-open the file.     |
+| `progress`                   | bool | False                                                                                                                           | If True, the script will display a progress bar during processing.      |
+| `open_file_after_processing` | bool | False                                                                                                                           | If True, the output file will be automatically opened after processing. |
 
 ## Description
 
