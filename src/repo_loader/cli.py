@@ -2,11 +2,11 @@
 Main entry point.
 """
 
-from gpt_repository_loader.gpt_repository_loader import (
-    main as gpt_repository_loader_main,
+from repo_loader.repo_loader import (
+    main as repo_loader_main,
 )
 
 
 def main() -> int:
     """Main entry point."""
-    return gpt_repository_loader_main()
+    return repo_loader_main()
