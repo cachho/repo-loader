@@ -108,8 +108,6 @@ def process_file(root, file, repo_path, ignore_list, output_file):
 def build_ignore_list(repo_path, filename):
     """Read ignore file by filename and build ignore list"""
     ignore_file_path = os.path.join(repo_path, filename)
-    if sys.platform == "win32":
-        ignore_file_path = ignore_file_path.replace("/", "\\")
 
     if not os.path.exists(ignore_file_path):
         # try and use the .gptignore file in the current directory as a fallback.
