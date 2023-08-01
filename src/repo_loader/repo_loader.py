@@ -133,11 +133,12 @@ def build_ignore_list(repo_path, filename):
     return ignore_list
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-locals
 def load(
     repo_path: Optional[str] = None,
     out_path: Optional[str] = None,
     preamble_file: Optional[str] = None,
+    preamble: Optional[str] = None,
     clipboard: bool = False,
     quiet: bool = False,
     progress: bool = False,
@@ -154,6 +155,9 @@ def load(
         preamble_file (str, optional): The path to a preamble file. The contents of this
                                        file will be written to the output file before the
                                        repository contents. If None, no preamble is used.
+        preamble (str, optional): Text that will be written to the output file before the
+                                  repository contents.
+                                  Cannot be used together with `--preamble-file`.
         clipboard (bool, optional): If True, the contents of the output file will be
                                      copied to the clipboard instead of written to a file.
                                      Defaults to False.
@@ -168,9 +172,14 @@ def load(
                                                      Defaults to False.
     """
 
+    # Validate arguments
+    if preamble and preamble_file:
+        raise ValueError("Preamble and preamble file cannot be used together")
+
     # Set defaults
     repo_path = repo_path or os.getcwd()
     out_path = out_path or "output.txt"
+    preamble = preamble or "The following text is a Git repository with code. ..."
 
     gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
     git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
@@ -186,7 +195,7 @@ def load(
                 preamble_text = pf.read()
                 output_file.write(f"{preamble_text}\n")
         else:
-            output_file.write("The following text is a Git repository with code. ...")
+            output_file.write(f"{preamble}\n")
         process_repository(repo_path, ignore_list, output_file, progress, quiet)
     with open(out_path, "a") as output_file:
         output_file.write("--END--")
@@ -215,8 +224,10 @@ def main() -> int:
         repo_path: The path to the git repository that should be processed.
                    If this argument is omitted, the current working directory is used.
         -o, --output: The path to the output file. If omitted, output.txt will be used.
-        -p, --preamble: The path to a preamble file. The contents of this file
+        -p, --preamble_file: The path to a preamble file. The contents of this file
                         will be written to the output file before the repository contents.
+        --preamble: Text that will be written to the output file before the repository contents.
+                     Cannot be used together with `--preamble-file`.
         --clipboard: If this flag is present, the contents of the output file
                      will be copied to the clipboard instead of written to a file.
         -q, --quiet: If this flag is present, the script will not print to stdout
@@ -236,7 +247,10 @@ def main() -> int:
     )
     parser.add_argument("repo_path", help="path to the git repository", type=str, nargs="?")
     parser.add_argument("-o", "--output", help="output file path", type=str, nargs="?")
-    parser.add_argument("-p", "--preamble", help="path to the preamble file", type=str, nargs="?")
+    parser.add_argument(
+        "-p", "--preamble_file", help="path to the preamble file", type=str, nargs="?"
+    )
+    parser.add_argument("--preamble", help="preamble text as raw string", type=str, nargs="?")
     parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
     parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
     parser.add_argument("-pg", "--progress", help="display a progress bar", action="store_true")
@@ -252,7 +266,8 @@ def main() -> int:
     load(
         repo_path=args.repo_path,
         out_path=args.output,
-        preamble_file=args.preamble,
+        preamble_file=args.preamble_file,
+        preamble=args.preamble,
         clipboard=args.clipboard,
         quiet=args.quiet,
         progress=args.progress,
