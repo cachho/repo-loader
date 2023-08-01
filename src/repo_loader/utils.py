@@ -9,7 +9,9 @@ def is_readable(input_string):
     :return: True if the string is more than 95% printable.
     """
     try:
-        printable_ratio = sum(c in string.printable for c in input_string) / len(input_string)
+        printable_ratio = sum(c in string.printable for c in input_string) / len(
+            input_string
+        )
     except ZeroDivisionError:
         printable_ratio = 0
     return printable_ratio > 0.95  # 95% of characters are printable

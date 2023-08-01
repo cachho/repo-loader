@@ -3,10 +3,7 @@ import shutil
 import tempfile
 import unittest
 
-from repo_loader.repo_loader import (
-    build_ignore_list,
-    process_repository,
-)
+from repo_loader.repo_loader import build_ignore_list, process_repository
 
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 GPT_IGNORE_PATH = os.path.join(PROJECT_ROOT, "src", "repo_loader", ".gptignore")
@@ -20,7 +17,9 @@ class TestGPTRepositoryLoader(unittest.TestCase):
     def test_end_to_end(self):
         # Set up the output file and the expected output file paths
         output_file_path = os.path.join(tempfile.mkdtemp(), "output.txt")
-        expected_output_file_path = os.path.join(self.test_data_path, "expected_output.txt")
+        expected_output_file_path = os.path.join(
+            self.test_data_path, "expected_output.txt"
+        )
 
         # Create an ignore list for the example repository
         ignore_file_path = os.path.join(self.example_repo_path, ".gptignore")
