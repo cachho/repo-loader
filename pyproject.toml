@@ -3,8 +3,8 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gptrepo"
-description = "gpt repository loader"
+name = "repo-loader"
+description = "repository loader for github and chatgpt"
 requires-python = ">=3.7"
 keywords = ["template-python-cmd"]
 license = { text = "BSD 3-Clause License" }
@@ -40,4 +40,4 @@ ignore_missing_imports = true
 
 
 [project.scripts]
-gptrepo = "gpt_repository_loader.cli:main"
+repo-loader = "repo_loader.cli:main"
