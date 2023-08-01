@@ -112,11 +112,15 @@ def build_ignore_list(repo_path, filename):
     if not os.path.exists(ignore_file_path):
         # try and use the .gptignore file in the current directory as a fallback.
         ignore_file_path = os.path.join(HERE, filename)
-        assert os.path.exists(ignore_file_path)
-        with open(ignore_file_path, "r") as ignore_file:
-            contents = ignore_file.read()
-        with open(ignore_file_path, "w") as ignore_file:
-            ignore_file.write(contents)
+        try:
+            assert os.path.exists(ignore_file_path)
+            with open(ignore_file_path, "r") as ignore_file:
+                contents = ignore_file.read()
+            with open(ignore_file_path, "w") as ignore_file:
+                ignore_file.write(contents)
+        except AssertionError:
+            # if the fallback file doesn't exist either, return empty list.
+            return []
 
     ignore_list = []
     # Check ignore_file_path again
