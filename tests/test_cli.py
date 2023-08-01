@@ -4,7 +4,7 @@ Unit test file.
 import os
 import unittest
 
-COMMAND = "gptrepo"
+COMMAND = "repo-loader"
 
 
 class MainTester(unittest.TestCase):
