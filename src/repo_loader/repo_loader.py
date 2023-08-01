@@ -179,7 +179,10 @@ def load(
     # Set defaults
     repo_path = repo_path or os.getcwd()
     out_path = out_path or "output.txt"
-    preamble = preamble or "The following text is a Git repository with code. ..."
+    preamble = (
+        preamble
+        or "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context."
+    )
 
     gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
     git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
