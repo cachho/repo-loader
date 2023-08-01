@@ -3,6 +3,7 @@
 import argparse
 import os
 import sys
+from typing import Optional
 
 import pyperclip
 from pathspec import PathSpec
@@ -134,9 +135,9 @@ def build_ignore_list(repo_path, filename):
 
 # pylint: disable=too-many-arguments
 def load(
-    repo_path: str = None,
-    out_path: str = None,
-    preamble_file: str = None,
+    repo_path: Optional[str] = None,
+    out_path: Optional[str] = None,
+    preamble_file: Optional[str] = None,
     clipboard: bool = False,
     quiet: bool = False,
     progress: bool = False,
