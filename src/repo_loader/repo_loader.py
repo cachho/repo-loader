@@ -36,7 +36,7 @@ def should_ignore(file_path, ignore_patterns):
 def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is_quiet):
     """Main function to iterate through the repository and write to the outfile."""
     # TODO: This could be optimized, by skipping a directory that's ignored,
-    # if the whole directory is ignored. For instance right now it will go through 
+    # if the whole directory is ignored. For instance right now it will go through
     # all files in `venv` and determine that each is ignored, instead of just skipping
     # the whole directory
     # Get a list of top-level files and directories.
@@ -44,11 +44,11 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
 
     for content in top_level_contents:
         content_path = os.path.join(repo_path, content)
-        
+
         # Check if it is a file or directory
         if os.path.isdir(content_path):
             # It is a directory
-            
+
             # Count the number of files in the directory (including all subdirectories).
             num_files = sum([len(files) for r, d, files in os.walk(content_path)])
             if num_files == 0:
@@ -57,8 +57,13 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
             if not is_quiet and not use_progress_bar:
                 print(f"Processing directory: {content}")
 
-            pbar = tqdm(total=num_files, bar_format='{l_bar}{bar:50}{r_bar}', desc = f"{content[:17]:<20}") if use_progress_bar else None
-
+            pbar = (
+                tqdm(
+                    total=num_files, bar_format="{l_bar}{bar:50}{r_bar}", desc=f"{content[:17]:<20}"
+                )
+                if use_progress_bar
+                else None
+            )
 
             for root, _, files in os.walk(content_path):
                 for file in files:
@@ -82,8 +87,8 @@ def process_file(root, file, repo_path, ignore_list, output_file):
     relative_file_path = os.path.relpath(file_path, repo_path)
 
     if not should_ignore(relative_file_path, ignore_list):
-        with open(file_path, "r", errors="ignore") as file:
-            contents = file.read()
+        with open(file_path, "r", errors="ignore") as f:
+            contents = f.read()
 
             if len(contents) == 0:
                 # Ignore empty files
@@ -155,7 +160,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     # There might be a better way to do this, in case there is a file with the same name you want to add.
     ignore_list = gpt_ignore_list + git_ignore_list + [out_path]
     # Filter comments and empty lines
-    ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != '#']
+    ignore_list = [x for x in ignore_list if len(x) > 0 and x[0] != "#"]
     # Filter duplicats
     ignore_list = list(set(ignore_list))
 
@@ -187,6 +192,6 @@ def main() -> int:  # pylint: disable=too-many-statements
             contents = output_file.read()
         pyperclip.copy(contents)
         os.remove(out_path)
-        if not (args.quiet):
+        if not args.quiet:
             print("Copied to clipboard")
     return 0

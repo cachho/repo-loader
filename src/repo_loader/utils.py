@@ -1,5 +1,6 @@
 import string
 
+
 def is_readable(s):
     """
     Heuristic to determine if a string is "readable" (mostly contains printable characters and forms meaningful words)
