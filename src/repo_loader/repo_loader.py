@@ -62,7 +62,9 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
 
             pbar = (
                 tqdm(
-                    total=num_files, bar_format="{l_bar}{bar:50}{r_bar}", desc=f"{content[:17]:<20}"
+                    total=num_files,
+                    bar_format="{l_bar}{bar:50}{r_bar}",
+                    desc=f"{content[:17]:<20}",
                 )
                 if use_progress_bar
                 else None
@@ -248,16 +250,28 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Process a git repository into a single file for chat gpt."
     )
-    parser.add_argument("repo_path", help="path to the git repository", type=str, nargs="?")
+    parser.add_argument(
+        "repo_path", help="path to the git repository", type=str, nargs="?"
+    )
     parser.add_argument("-o", "--output", help="output file path", type=str, nargs="?")
     parser.add_argument(
         "-p", "--preamble_file", help="path to the preamble file", type=str, nargs="?"
     )
-    parser.add_argument("--preamble", help="preamble text as raw string", type=str, nargs="?")
-    parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
-    parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
-    parser.add_argument("-pg", "--progress", help="display a progress bar", action="store_true")
-    parser.add_argument("--open", help="open file after processing", action="store_true")
+    parser.add_argument(
+        "--preamble", help="preamble text as raw string", type=str, nargs="?"
+    )
+    parser.add_argument(
+        "--clipboard", help="copy the output to the clipboard", action="store_true"
+    )
+    parser.add_argument(
+        "-q", "--quiet", help="no stdout, file not opened", action="store_true"
+    )
+    parser.add_argument(
+        "-pg", "--progress", help="display a progress bar", action="store_true"
+    )
+    parser.add_argument(
+        "--open", help="open file after processing", action="store_true"
+    )
     parser.add_argument(
         "--write-config",
         help="Write a default config file to the target directory.",

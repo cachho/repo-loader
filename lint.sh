@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 # cd to self bash script directory
-cd $( dirname ${BASH_SOURCE[0]})
+# cd $( dirname ${BASH_SOURCE[0]})
 echo Running black src tests
 black src tests
 echo Running isort src tests

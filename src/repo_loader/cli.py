@@ -2,9 +2,7 @@
 Main entry point.
 """
 
-from repo_loader.repo_loader import (
-    main as repo_loader_main,
-)
+from repo_loader.repo_loader import main as repo_loader_main
 
 
 def main() -> int:
