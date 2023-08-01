@@ -15,7 +15,7 @@ dependencies = [
     "tqdm==4.65.0"
 ]
 
-version = "0.1.3"
+version = "0.2.0"
 
 [tool.pylint."MESSAGES CONTROL"]
 good-names = [
