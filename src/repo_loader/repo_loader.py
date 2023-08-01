@@ -35,6 +35,7 @@ def should_ignore(file_path, ignore_patterns):
 
 def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is_quiet):
     """Main function to iterate through the repository and write to the outfile."""
+    # pylint: disable=fixme
     # TODO: This could be optimized, by skipping a directory that's ignored,
     # if the whole directory is ignored. For instance right now it will go through
     # all files in `venv` and determine that each is ignored, instead of just skipping
@@ -50,6 +51,7 @@ def process_repository(repo_path, ignore_list, output_file, use_progress_bar, is
             # It is a directory
 
             # Count the number of files in the directory (including all subdirectories).
+            # pylint: disable=consider-using-generator
             num_files = sum([len(files) for r, d, files in os.walk(content_path)])
             if num_files == 0:
                 continue
@@ -160,6 +162,7 @@ def main() -> int:  # pylint: disable=too-many-statements
     gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
     git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
 
+    # pylint: disable=fixme
     # TODO: Added `output.txt` to gitignore, otherwise it keeps adding itself.
     # There might be a better way to do this, in case there is a file with the same name you want to add.
     ignore_list = gpt_ignore_list + git_ignore_list + [out_path]
