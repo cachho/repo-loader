@@ -1,6 +1,23 @@
 # repo-loader
 
+[![Linting](../../actions/workflows/lint.yml/badge.svg)](../../actions/workflows/lint.yml)
+[![MacOS_Tests](../../actions/workflows/push_macos.yml/badge.svg)](../../actions/workflows/push_macos.yml)
+[![Ubuntu_Tests](../../actions/workflows/push_ubuntu.yml/badge.svg)](../../actions/workflows/push_ubuntu.yml)
+[![Win_Tests](../../actions/workflows/push_win.yml/badge.svg)](../../actions/workflows/push_win.yml)
+
 This is a fork of the very excellent [gptrepo](https://github.com/zackees/gptrepo) by zackees, which itself is a fork of [gpt-repository-loader](https://github.com/mpoon/gpt-repository-loader) by mpoon.
+
+This tool concatenates through all the files in the repo and adds ai prompts which can be used for chat gpt conversations.
+
+Simply open up the file, copy and paste it into the chat gpt window and then ask your question about the code.
+
+## Features
+
+- dump entire code of github repository into a single file
+- easy to split if you want to embed single files
+- respect .gitignore and .gptignore
+- show progress bar
+- use in CLI and scripts
 
 ## Usage
 
@@ -18,19 +35,22 @@ from repo_loader import repo_loader
 repo_loader.load("example_repo")
 ```
 
-This tool concatenates through all the files in the repo and adds ai prompts which can be used for chat gpt conversations.
+### Options
 
-Simply open up the file, copy and paste it into the chat gpt window and then ask your question about the code.
+| Argument                     | Type | Default                                               | Description                                                             |
+| ---------------------------- | ---- | ----------------------------------------------------- | ----------------------------------------------------------------------- |
+| `repo_path`                  | str  | Current directory                                     | The path to the git repository to be processed.                         |
+| `out_path`                   | str  | 'output.txt'                                          | The path to the output file.                                            |
+| `preamble_file`              | str  | None                                                  | The path to a preamble file. Contents are written to output first.      |
+| `preamble`                   | str  | The following text is a Git repository with code. ... | Text that will be written to the output file before the repo contents.  |
+| `clipboard`                  | bool | False                                                 | If True, output is copied to the clipboard instead of a file.           |
+| `quiet`                      | bool | False                                                 | If True, the script will not print to stdout or auto-open the file.     |
+| `progress`                   | bool | False                                                 | If True, the script will display a progress bar during processing.      |
+| `open_file_after_processing` | bool | False                                                 | If True, the output file will be automatically opened after processing. |
 
-This will be particularly useful when chat gpt4-32k is released. Right now this will only work on very small repos.
+## Description
 
-[![Linting](../../actions/workflows/lint.yml/badge.svg)](../../actions/workflows/lint.yml)
-
-[![MacOS_Tests](../../actions/workflows/push_macos.yml/badge.svg)](../../actions/workflows/push_macos.yml)
-[![Ubuntu_Tests](../../actions/workflows/push_ubuntu.yml/badge.svg)](../../actions/workflows/push_ubuntu.yml)
-[![Win_Tests](../../actions/workflows/push_win.yml/badge.svg)](../../actions/workflows/push_win.yml)
-
-`repo-loader` is a command-line tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
+`repo-loader` is a command-line and script tool that converts the contents of a Git repository into a text format, preserving the structure of the files and file contents. The generated output can be interpreted by AI language models, allowing them to process the repository's contents for various tasks, such as code review or documentation generation.
 
 ## Contributing
 
@@ -53,7 +73,3 @@ To run the tests for `repo-loader`, follow these steps:
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Versions
-
-- 1.0.3: Remove media files from concatenation.
