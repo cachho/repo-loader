@@ -128,8 +128,6 @@ def build_ignore_list(repo_path, filename):
         # Add lines to ignore_list
         with open(ignore_file_path, "r") as ignore_file:
             for line in ignore_file:
-                if sys.platform == "win32":
-                    line = line.replace("/", "\\")
                 ignore_list.append(line.strip())
     return ignore_list
 
