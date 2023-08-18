@@ -183,8 +183,9 @@ def load(
     out_path = out_path or "output.txt"
     preamble = (
         preamble
-        or "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context."
-    )
+        if preamble is not None
+        else "The following text is a Git repository with code. The structure of the text are sections that begin with ----!@#$----, followed by a single line containing the file path and file name, followed by a variable amount of lines containing the file contents. The text representing the Git repository ends when the symbols --END-- are encounted. Any further text beyond --END-- are meant to be interpreted as instructions using the aforementioned Git repository as context."
+    )  # Falsy strings like "" can be used as preamble. Default is only used for None.
 
     gpt_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gptignore")
     git_ignore_list = build_ignore_list(repo_path=repo_path, filename=".gitignore")
@@ -250,28 +251,16 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Process a git repository into a single file for chat gpt."
     )
-    parser.add_argument(
-        "repo_path", help="path to the git repository", type=str, nargs="?"
-    )
+    parser.add_argument("repo_path", help="path to the git repository", type=str, nargs="?")
     parser.add_argument("-o", "--output", help="output file path", type=str, nargs="?")
     parser.add_argument(
         "-p", "--preamble_file", help="path to the preamble file", type=str, nargs="?"
     )
-    parser.add_argument(
-        "--preamble", help="preamble text as raw string", type=str, nargs="?"
-    )
-    parser.add_argument(
-        "--clipboard", help="copy the output to the clipboard", action="store_true"
-    )
-    parser.add_argument(
-        "-q", "--quiet", help="no stdout, file not opened", action="store_true"
-    )
-    parser.add_argument(
-        "-pg", "--progress", help="display a progress bar", action="store_true"
-    )
-    parser.add_argument(
-        "--open", help="open file after processing", action="store_true"
-    )
+    parser.add_argument("--preamble", help="preamble text as raw string", type=str, nargs="?")
+    parser.add_argument("--clipboard", help="copy the output to the clipboard", action="store_true")
+    parser.add_argument("-q", "--quiet", help="no stdout, file not opened", action="store_true")
+    parser.add_argument("-pg", "--progress", help="display a progress bar", action="store_true")
+    parser.add_argument("--open", help="open file after processing", action="store_true")
     parser.add_argument(
         "--write-config",
         help="Write a default config file to the target directory.",
